@@ -4,7 +4,7 @@ const app = express(); // Initialize the express application
 require("dotenv").config();
 const port = process.env.PORT || 3000;
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 // Middleware
 app.use(cors());
@@ -41,6 +41,13 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
+    app.get('/jobs/:id', async(req, res) =>{
+      const id = req.params.id
+      const query = {_id: new ObjectId(id)}
+      const result = await jobsCollection.findOne(query)
+      res.send(result)
+    })
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
