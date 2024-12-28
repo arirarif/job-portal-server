@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express(); // Initialize the express application
-require('dotenv').config()
+require("dotenv").config();
 const port = process.env.PORT || 3000;
 
 const { MongoClient, ServerApiVersion } = require("mongodb");
@@ -32,6 +32,15 @@ async function run() {
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
+    
+    //jobs related APIs
+    const jobsCollection = client.db("jobPortal").collection("jobs");
+
+    app.get("/jobs", async (req, res) => {
+      const cursor = jobsCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
@@ -46,5 +55,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Job is listed on port: ${port}`);
 });
-
-
